@@ -10,8 +10,14 @@ return function (App $app) {
         echo "Selamat datang di Perpustakaan";
     });
 
+    /////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////ROUTES BUKU//////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+
+    //Get//////////////////////////////////
+
     $app->get("/buku/", function (Request $request, Response $response){
-        $sql = "SELECT * FROM buku";
+        $sql = "SELECT * FROM perpus_buku";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll();
@@ -20,7 +26,7 @@ return function (App $app) {
 
     $app->get("/buku/{id}", function (Request $request, Response $response, $args){
         $id = $args["id"];
-        $sql = "SELECT * FROM buku WHERE id_buku=:id";
+        $sql = "SELECT * FROM perpus_buku WHERE id_buku=:id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([":id" => $id]);
         $result = $stmt->fetch();
@@ -29,18 +35,20 @@ return function (App $app) {
 
     $app->get("/buku/search/", function (Request $request, Response $response, $args){
         $keyword = $request->getQueryParam("keyword");
-        $sql = "SELECT * FROM buku WHERE judul LIKE '%$keyword%' OR sinopsis LIKE '%$keyword%' OR penulis LIKE '%$keyword%'";
+        $sql = "SELECT * FROM perpus_buku WHERE judul LIKE '%$keyword%' OR sinopsis LIKE '%$keyword%' OR penulis LIKE '%$keyword%'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll();
         return $response->withJson(["status" => "success", "data" => $result], 200);
     });
 
+    //Post/////////////////////////////////
+
     $app->post("/buku/", function (Request $request, Response $response){
 
         $new_book = $request->getParsedBody();
     
-        $sql = "INSERT INTO buku (judul, penulis, sinopsis) VALUE (:judul, :penulis, :sinopsis)";
+        $sql = "INSERT INTO perpus_buku (judul, penulis, sinopsis) VALUE (:judul, :penulis, :sinopsis)";
         $stmt = $this->db->prepare($sql);
     
         $data = [
@@ -55,10 +63,12 @@ return function (App $app) {
         return $response->withJson(["status" => "failed", "data" => "0"], 200);
     });
 
+    //Put///////////////////////////////////
+
     $app->put("/buku/{id}", function (Request $request, Response $response, $args){
         $id = $args["id"];
         $new_book = $request->getParsedBody();
-        $sql = "UPDATE buku SET judul=:judul, penulis=:penulis, sinopsis=:sinopsis WHERE book_id=:id";
+        $sql = "UPDATE perpus_buku SET judul=:judul, penulis=:penulis, sinopsis=:sinopsis WHERE book_id=:id";
         $stmt = $this->db->prepare($sql);
         
         $data = [
@@ -74,9 +84,11 @@ return function (App $app) {
         return $response->withJson(["status" => "failed", "data" => "0"], 200);
     });
 
+    //Delete///////////////////////////
+
     $app->delete("/buku/{id}", function (Request $request, Response $response, $args){
         $id = $args["id"];
-        $sql = "DELETE FROM buku WHERE id_buku=:id";
+        $sql = "DELETE FROM perpus_buku WHERE id_buku=:id";
         $stmt = $this->db->prepare($sql);
         
         $data = [
@@ -88,4 +100,7 @@ return function (App $app) {
         
         return $response->withJson(["status" => "failed", "data" => "0"], 200);
     });
+
+    ////////////////////////////////END OF BUKU/////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 };
