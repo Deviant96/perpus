@@ -20,7 +20,7 @@ return [
         'db' => [
             'host' => 'localhost',
             'user' => 'root',
-            'pass' => '12345678',
+            'pass' => 'admin',
             'dbname' => 'perpustakaan',
             'driver' => 'mysql'
         ],

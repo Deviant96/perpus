@@ -48,13 +48,15 @@ return function (App $app) {
 
         $new_book = $request->getParsedBody();
     
-        $sql = "INSERT INTO perpus_buku (judul, penulis, sinopsis) VALUE (:judul, :penulis, :sinopsis)";
+        $sql = "INSERT INTO perpus_buku (judul, penulis, sinopsis, tahun, isbn) VALUE (:judul, :penulis, :sinopsis, :tahun, :isbn)";
         $stmt = $this->db->prepare($sql);
     
         $data = [
             ":judul" => $new_book["judul"],
             ":penulis" => $new_book["penulis"],
-            ":sinopsis" => $new_book["sinopsis"]
+            ":sinopsis" => $new_book["sinopsis"],
+            ":tahun" => $new_book["tahun"],
+            ":isbn" => $new_book["isbn"]
         ];
     
         if($stmt->execute($data))
@@ -68,7 +70,7 @@ return function (App $app) {
     $app->put("/buku/{id}", function (Request $request, Response $response, $args){
         $id = $args["id"];
         $new_book = $request->getParsedBody();
-        $sql = "UPDATE perpus_buku SET judul=:judul, penulis=:penulis, sinopsis=:sinopsis WHERE book_id=:id";
+        $sql = "UPDATE perpus_buku SET judul=:judul, penulis=:penulis, sinopsis=:sinopsis WHERE id_buku=:id";
         $stmt = $this->db->prepare($sql);
         
         $data = [
